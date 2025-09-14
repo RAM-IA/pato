@@ -1,4 +1,4 @@
-declare module './socket' {
+declare module './socket.js' {
   const value: any;
-  export default value;
+  export = value;
 }
