@@ -4,8 +4,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import { MongoClient } from 'mongodb';
 // Configuración MongoDB
-// const mongoUri = 'mongodb+srv://UserGameDuck:Duck1409@cluster0.vfolj0r.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0&tls=true';
-const mongoUri = 'mongodb+srv://UserGameDuck:Duck1409@cluster0.vfolj0r.mongodb.net/patos_db?retryWrites=true&w=majority&tls=true';
+const mongoUri = process.env.MONGODB_URI || 'mongodb+srv://UserGameDuck:Duck1409@cluster0.vfolj0r.mongodb.net/patos_db?retryWrites=true&w=majority&tls=true';
 const client = new MongoClient(mongoUri);
 let achievementsCollection;
 
