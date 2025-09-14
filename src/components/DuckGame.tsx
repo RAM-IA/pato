@@ -24,7 +24,7 @@ const DuckGame: React.FC = () => {
   const fetchScores = async () => {
     setLoadingScores(true);
     try {
-      const res = await axios.get('http://localhost:4000/api/achievements');
+  const res = await axios.get('https://appweb-89yr.onrender.com/api/achievements');
       setScores(res.data);
     } catch (err) {
       setScores([]);
@@ -121,7 +121,7 @@ const DuckGame: React.FC = () => {
   // Guardar logro en backend
   const saveAchievement = async () => {
     try {
-      const res = await axios.post('http://localhost:4000/api/achievements', {
+  const res = await axios.post('https://appweb-89yr.onrender.com/api/achievements', {
         name: playerName,
         level,
       });
