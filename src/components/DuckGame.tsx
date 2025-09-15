@@ -149,7 +149,7 @@ const DuckGame: React.FC<DuckGameProps> = ({ defaultPlayerName = 'Jugador' }) =>
   };
 
   return (
-  <div ref={gameAreaRef} className="relative w-full h-screen min-h-[400px] bg-green-600 rounded-lg overflow-hidden flex items-center justify-center">
+  <div ref={gameAreaRef} className="fixed inset-0 w-full h-full bg-green-600 overflow-hidden flex items-center justify-center z-10">
       {/* Pantalla de inicio y edición de nombre */}
       {screen === 'start' && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-white bg-opacity-80">
