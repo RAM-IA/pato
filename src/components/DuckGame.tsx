@@ -16,7 +16,11 @@ function getRandomPosition(maxWidth: number, maxHeight: number) {
   return { x, y };
 }
 
-const DuckGame: React.FC = () => {
+interface DuckGameProps {
+  defaultPlayerName?: string;
+}
+
+const DuckGame: React.FC<DuckGameProps> = ({ defaultPlayerName = 'Jugador' }) => {
   const [screen, setScreen] = useState<'start' | 'playing' | 'win' | 'lose' | 'scores'>('start');
   const [scores, setScores] = useState<{ name: string; level: number; date: string }[]>([]);
   const [loadingScores, setLoadingScores] = useState(false);
@@ -32,7 +36,7 @@ const DuckGame: React.FC = () => {
     setLoadingScores(false);
   };
   const [level, setLevel] = useState(1);
-  const [playerName, setPlayerName] = useState('Jugador');
+  const [playerName, setPlayerName] = useState(defaultPlayerName);
   const [editingName, setEditingName] = useState(false);
   const [timer, setTimer] = useState(BASE_TIME);
   const [ducks, setDucks] = useState([
@@ -65,16 +69,24 @@ const DuckGame: React.FC = () => {
     return () => clearInterval(interval);
   }, [screen, speed]);
 
-  // Cronómetro
+  // Cronómetro compatible con móviles
   useEffect(() => {
     if (screen !== 'playing') return;
-    if (timer === 0) {
-      setScreen('lose');
-      return;
-    }
-    const t = setTimeout(() => setTimer(timer - 1), 1000);
-    return () => clearTimeout(t);
-  }, [timer, screen]);
+  const start = Date.now();
+    let rafId: number;
+    const tick = () => {
+      const elapsed = Math.floor((Date.now() - start) / 1000);
+      if (timer - elapsed <= 0) {
+        setTimer(0);
+        setScreen('lose');
+        return;
+      }
+      setTimer(BASE_TIME + (level - 1) * 10 - elapsed);
+      rafId = requestAnimationFrame(tick);
+    };
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [screen, level, timer]);
 
   // Click en un pato
   const handleDuckClick = (id: number) => {

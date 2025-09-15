@@ -22,7 +22,7 @@ async function connectMongo() {
 connectMongo();
 
 const app = express();
-app.use(cors({ origin: 'http://localhost:5173' }));
+app.use(cors());
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
@@ -50,8 +50,8 @@ app.get('/', (req, res) => {
 // Endpoint para guardar logros en MongoDB
 app.post('/api/achievements', express.json(), async (req, res) => {
   const { name, level } = req.body;
-  if (!name || !level) {
-    return res.status(400).json({ error: 'Faltan datos' });
+  if (!name || typeof name !== 'string' || !level || typeof level !== 'number') {
+    return res.status(400).json({ error: 'Faltan datos válidos' });
   }
   try {
     if (!achievementsCollection) {
