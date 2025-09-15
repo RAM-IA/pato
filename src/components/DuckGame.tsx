@@ -69,24 +69,21 @@ const DuckGame: React.FC<DuckGameProps> = ({ defaultPlayerName = 'Jugador' }) =>
     return () => clearInterval(interval);
   }, [screen, speed]);
 
-  // Cronómetro compatible con móviles
+  // Cronómetro robusto para todos los dispositivos
   useEffect(() => {
     if (screen !== 'playing') return;
-  const start = Date.now();
-    let rafId: number;
-    const tick = () => {
-      const elapsed = Math.floor((Date.now() - start) / 1000);
-      if (timer - elapsed <= 0) {
-        setTimer(0);
-        setScreen('lose');
-        return;
-      }
-      setTimer(BASE_TIME + (level - 1) * 10 - elapsed);
-      rafId = requestAnimationFrame(tick);
-    };
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
-  }, [screen, level, timer]);
+  const intervalId = setInterval(() => {
+      setTimer(prev => {
+        if (prev <= 1) {
+          clearInterval(intervalId);
+          setScreen('lose');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(intervalId);
+  }, [screen, level]);
 
   // Click en un pato
   const handleDuckClick = (id: number) => {
